@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Page Title</title>
+<link rel="stylesheet" href="trying.css">
+</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<body>
+<div id="navbar"> 
+<input type="text" id="nameBox" placeholder="Name" ></input>
+<input type="text" id="genderBox" placeholder="Gender" ></input>
+<button class="button1" onclick="starter()"><h3 class="buttonText">Start</h3></button>
+<button class="button2" onclick="stopper()"><h3 class="buttonText">Stop</h3></button>
+<button class="button3"><h3 id="buttonSaveText">Save</h3></button>
+</div>
+
+
+<span class="PlotHeadings">
+<H2 class="Headingtext"><b> 1. Vatta Plot </b></H2>
+</span>
+<canvas id="myChart" style="width:100%; height: 500px; max-width:1400px"></canvas>
+
+<script>
+var array_length = 200;
+var xValues = [];
+for(let i=0;i < array_length; i++)
+{
+  xValues[i] = i;
+}
+
+var yValues = [];
+
+const myChart = new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: 0, max:50}}],
+      xAxes: [{ticks:{min: 0, max:200}}]
+    }
+  }
+});
+</script>
+<br>
+<span class="PlotHeadings">
+  <H2 class="Headingtext"><b> 2. Pitta Plot </b></H2>
+</span>
+<br>
+<br>
+<canvas id="myChart2" style="width:100%; height: 500px; max-width:1400px"></canvas>
+
+<script>
+  var array_length = 200;
+  var xValues = [];
+  for(let i=0;i < array_length; i++)
+  {
+    xValues[i] = i;
+  }
+  
+  var yValues2 = [];
+  
+  const myChart2 = new Chart("myChart2", {
+    type: "line",
+    data: {
+      labels: xValues,
+      datasets: [{
+        fill: false,
+        lineTension: 0,
+        backgroundColor: "rgba(0,0,255,1.0)",
+        borderColor: "rgba(0,0,255,0.1)",
+        data: yValues2
+      }]
+    },
+    options: {
+      legend: {display: false},
+      scales: {
+        yAxes: [{ticks: {min: 0, max:50}}],
+        xAxes: [{ticks:{min: 0, max:200}}]
+      }
+    }
+  });
+  </script>
+<br>
+<br>
+<span class="PlotHeadings">
+  <H2 class="Headingtext"><b> 3. Kapha Plot </b></H2>
+</span>
+<canvas id="myChart3" style="width:100%; height: 500px; max-width:1400px"></canvas>
+
+<script>
+  var array_length = 200;
+  var xValues = [];
+  for(let i=0;i < array_length; i++)
+  {
+    xValues[i] = i;
+  }
+  
+  var yValues3 = [];
+  
+  const myChart3 = new Chart("myChart3", {
+    type: "line",
+    data: {
+      labels: xValues,
+      datasets: [{
+        fill: false,
+        lineTension: 0,
+        backgroundColor: "rgba(0,0,255,1.0)",
+        borderColor: "rgba(0,0,255,0.1)",
+        data: yValues3
+      }]
+    },
+    options: {
+      legend: {display: false},
+      scales: {
+        yAxes: [{ticks: {min: 0, max:50}}],
+        xAxes: [{ticks:{min: 0, max:200}}]
+      }
+    }
+  });
+  </script>
+
+
+</span>
+
+</body>
+<script>
+
+  var startstop = 0;
+  var saverstartstop = 0;
+  var csvFileData = [];
+  var tdm = 0;
+  // var slider = document.getElementById('ID_LED_INTENSITY');
+  // var output = document.getElementById('ID_LED_INTENSITY_VALUE');
+  // slider.addEventListener('change', slider_changed);
+
+  var Socket;
+
+  function starter()
+  {
+    startstop = 1;
+  }
+
+  function stopper()
+  {
+    startstop = 0;
+  }
+
+  function startsaver()
+  {
+    saverstartstop = 1;
+  }
+
+  function stopsaver()
+  {
+    saverstartstop = 0;
+    download_csv_file();
+  }
+  
+  function download_csv_file() {
+
+  //define the heading for each row of the data
+  var csv = 'Kapha,Pitta,Vatta\n';
+
+  //merge the data with CSV
+  csvFileData.forEach(function(row) {
+        csv += row.join(',');
+        csv += "\n";
+  });
+
+  //display the created CSV data on the web browser 
+  document.write(csv);
+
+
+  var hiddenElement = document.createElement('a');
+  hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+  hiddenElement.target = '_blank';
+
+  //provide the name for the CSV file to be downloaded
+  hiddenElement.download = 'ChangeThis.csv';
+  hiddenElement.click();
+  csvFileData=[];
+}
+
+  function init() {
+    Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+    Socket.onmessage = function(event) {
+      processCommand(event);
+    };
+  }
+  
+  
+  
+  function slider_changed () {
+  var l_LED_intensity = slider.value;
+	console.log(l_LED_intensity);
+	var msg = { type: 'LED_intensity', value: l_LED_intensity};
+	Socket.send(JSON.stringify(msg)); 
+  }
+
+  
+  function processCommand(event) {
+  tdm = (tdm+1)%3;
+  if(tdm==0)
+  {
+    var obj1 = JSON.parse(event.data);
+    var type = obj1.type;
+  }
+  else if(tdm==1)
+  {
+    var obj2 = JSON.parse(event.data);
+    var type = obj2.type;
+  }
+  else if(tdm==2)
+  {
+    var obj3 = JSON.parse(event.data);
+    var type = obj3.type;
+  }
+
+	if (type.localeCompare("LED_intensity") == 0) { 
+	  //var l_LED_intensity = parseInt(obj.value); 
+	}
+  else if(type.localeCompare("graph_update")==0){
+
+
+    if(startstop==1)
+    {
+      //console.log(obj.value);
+      if(tdm==0)
+      {
+      myChart.data.datasets[0].data = obj1.value;
+      myChart.options.scales.yAxes[0].ticks.min = Math.floor(0.995*Math.min(...obj1.value));
+      myChart.options.scales.yAxes[0].ticks.max = Math.floor(1.005*Math.max(...obj1.value));
+      myChart.update();
+      }
+      else if(tdm==1)
+      {
+      myChart2.data.datasets[0].data = obj2.value;
+      myChart2.options.scales.yAxes[0].ticks.min = Math.floor(0.995*Math.min(...obj2.value));
+      myChart2.options.scales.yAxes[0].ticks.max = Math.floor(1.005*Math.max(...obj2.value));
+      myChart2.update();
+      }
+      if(tdm==2)
+      {
+      myChart3.data.datasets[0].data = obj3.value;
+      myChart3.options.scales.yAxes[0].ticks.min = Math.floor(0.995*Math.min(...obj3.value));
+      myChart3.options.scales.yAxes[0].ticks.max = Math.floor(1.005*Math.max(...obj3.value));
+      myChart3.update();
+      }
+    }
+
+    if(startsaver==1)
+    {
+      csvFileData.push([obj1.value[array_length-1],[obj2.value[array_length-1]],[obj3.value[array_length-1]]]);
+    }
+  }
+  }
+  window.onload = function(event) {
+    init();
+  }
+</script>
+</html>

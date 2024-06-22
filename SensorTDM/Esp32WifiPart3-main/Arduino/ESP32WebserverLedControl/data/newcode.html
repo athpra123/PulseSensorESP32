@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Page Title</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+</head>
+<body>
+<h1><b><u>Vatta Pitta Kapha Plots from the HandSet</u></b></h1>
+  <br>
+  <h2><b>1. Vatta Plot</b></h2>
+  <canvas id="vattaChart" style="width:100%; height: 500px; max-width:1400px"></canvas>
+
+  <h2><b>2. Pitta Plot</b></h2>
+  <canvas id="pittaChart" style="width:100%; height: 500px; max-width:1400px"></canvas>
+
+  <h2><b>3. Kapha Plot</b></h2>
+  <canvas id="kaphaChart" style="width:100%; height: 500px; max-width:1400px"></canvas>
+
+  <br>
+  <br>
+  Set intensity level: <br>
+  <input type='range' min='1' max='100' value='50' class='slider' id='ID_LED_INTENSITY'>
+  Value: <span id='ID_LED_INTENSITY_VALUE'>-</span><br>
+
+  <script>
+    var array_length = 200;
+    var xValues = [];
+    for (let i = 0; i < array_length; i++) {
+      xValues[i] = i;
+    }
+
+    var vattaValues = [];
+    var pittaValues = [];
+    var kaphaValues = [];
+
+    const vattaChart = new Chart("vattaChart", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [{
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(0,0,255,1.0)",
+          borderColor: "rgba(0,0,255,0.1)",
+          data: vattaValues
+        }]
+      },
+      options: {
+        legend: { display: false },
+        scales: {
+          yAxes: [{
+            ticks: { min: 0, max: 50 }
+          }],
+          xAxes: [{
+            ticks: { min: 0, max: 200 }
+          }]
+        }
+      }
+    });
+
+    const pittaChart = new Chart("pittaChart", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [{
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(255,0,0,1.0)",
+          borderColor: "rgba(255,0,0,0.1)",
+          data: pittaValues
+        }]
+      },
+      options: {
+        legend: { display: false },
+        scales: {
+          yAxes: [{
+            ticks: { min: 0, max: 50 }
+          }],
+          xAxes: [{
+            ticks: { min: 0, max: 200 }
+          }]
+        }
+      }
+    });
+
+    const kaphaChart = new Chart("kaphaChart", {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: [{
+          fill: false,
+          lineTension: 0,
+          backgroundColor: "rgba(0,255,0,1.0)",
+          borderColor: "rgba(0,255,0,0.1)",
+          data: kaphaValues
+        }]
+      },
+      options: {
+        legend: { display: false },
+        scales: {
+          yAxes: [{
+            ticks: { min: 0, max: 50 }
+          }],
+          xAxes: [{
+            ticks: { min: 0, max: 200 }
+          }]
+        }
+      }
+    });
+
+    var slider = document.getElementById('ID_LED_INTENSITY');
+    var output = document.getElementById('ID_LED_INTENSITY_VALUE');
+    slider.addEventListener('change', slider_changed);
+
+    var Socket;
+
+    function init() {
+      Socket = new WebSocket('ws://' + window.location.hostname + ':81/');
+      Socket.onmessage = function (event) {
+        processCommand(event);
+      };
+    }
+
+    function slider_changed() {
+      var l_LED_intensity = slider.value;
+      console.log(l_LED_intensity);
+      var msg = { type: 'LED_intensity', value: l_LED_intensity };
+      Socket.send(JSON.stringify(msg));
+    }
+
+    function processCommand(event) {
+      var obj = JSON.parse(event.data);
+      var type = obj.type;
+      if (type.localeCompare("LED_intensity") == 0) {
+        var l_LED_intensity = parseInt(obj.value);
+        console.log(l_LED_intensity);
+        slider.value = l_LED_intensity;
+        output.innerHTML = l_LED_intensity;
+      } else if (type.localeCompare("graph_update") == 0) {
+        var sensorReadings = obj.value;
+
+        // Calculate min and max values from the sensor readings for each sensor
+        var minVatta = Math.min(minVatta,sensorReadings[0]);
+        var maxVatta = Math.max(maxVatta,sensorReadings[0]);
+        var minPitta = Math.min(minPitta,sensorReadings[1]);
+        var maxPitta = Math.max(maxPitta,sensorReadings[1]);
+        var minKapha = Math.min( minKapha,sensorReadings[2]);
+        var maxKapha = Math.max(maxKapha,sensorReadings[2]);
+
+        // Update the y-axis ticks with the calculated min and max values for each sensor
+        vattaChart.options.scales.yAxes[0].ticks.min = minVatta;
+        vattaChart.options.scales.yAxes[0].ticks.max = maxVatta;
+        pittaChart.options.scales.yAxes[0].ticks.min = minPitta;
+        pittaChart.options.scales.yAxes[0].ticks.max = maxPitta;
+        kaphaChart.options.scales.yAxes[0].ticks.min = minKapha;
+        kaphaChart.options.scales.yAxes[0].ticks.max = maxKapha;
+
+        // Update the chart data for each sensor and update the charts
+        vattaChart.data.datasets[0].data = sensorReadings[0];
+        pittaChart.data.datasets[0].data = sensorReadings[1];
+        kaphaChart.data.datasets[0].data = sensorReadings[2];
+
+        vattaChart.update();
+        pittaChart.update();
+        kaphaChart.update();
+      }
+    }
+
+    window.onload = function (event) {
+      init();
+    }
+  </script>
+</body>
+</html>

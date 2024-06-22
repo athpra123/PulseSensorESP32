@@ -1,0 +1,172 @@
+
+
+.PlotHeadings{
+    width: 1300px;
+    font-size: 170%;
+    border: solid 2px;
+    border-color:gray;
+    border-radius: 10px;
+    display: inline-block;
+    background-color:white;
+    text-align: center;
+    padding: 50px 50px 0px 50px;
+    height: 10px;
+    position: relative;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+
+
+}
+
+#navbar{
+    width: 1400px;
+    font-size: 200%;
+    border-bottom: solid 2px;
+    border-color:gray;
+    border-radius: 0px;
+    display: inline-block;
+    background-color:white;
+    text-align: center;
+    height: 120px;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+
+
+}
+
+.Headingtext{
+    position: relative;
+    bottom: 80px;
+}
+
+#buttonBox{
+    width: 1400px;
+    height:50px;
+    background-color: white;
+}
+.buttonText{
+    position: relative;
+    bottom: 35px;
+}
+
+.button1{
+    width: 200px;
+    height: 50px;
+    border: 2px solid;
+    background-color: white;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 100%;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+    position:relative;
+    left: 20px;
+    top: 30px;
+}
+#buttonSaveText{
+    position: relative;
+    bottom: 33px;
+}
+.button2{
+    width: 200px;
+    height: 50px;
+    border: 2px solid;
+    background-color: white;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 100%;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+    position:relative;
+    left: 20px;
+    top: 30px;
+    bottom: 0px;
+    
+}
+.button1:hover{
+    width: 200px;
+    height: 50px;
+    border: 2px solid;
+    background-color: rgb(182, 179, 179);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 100%;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+    position:relative;
+    left: 20px;
+    top: 30px;
+
+}
+.button2:hover{
+    width: 200px;
+    height: 50px;
+    border: 2px solid;
+    background-color:  rgb(182, 179, 179);
+    border-radius: 10px;
+    text-align: center;
+    font-size: 100%;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+    position:relative;
+    left: 20px;
+    top: 30px;
+    bottom: 0px;
+
+}
+.button3{
+    width: 200px;
+    height: 50px;
+    border: 2px solid;
+    font-size: 100%;
+    background-color: white;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+    position:relative;
+    left: 20px;
+    top: 30px;
+}
+
+.button3:hover{
+    width: 200px;
+    height: 50px;
+    border: 2px solid;
+    font-size: 100%;
+    background-color: rgb(182, 179, 179);
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+    position:relative;
+    left: 20px;
+    top: 30px;
+}
+
+#nameBox{
+    width: 500px;
+    height: 50px;
+    border: 2px solid;
+    font-size: 100%;
+    background-color: white;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+    position:relative;
+    right: 10px;
+    bottom:10px;
+
+}
+#genderBox{
+    width: 200px;
+    height: 50px;
+    border: 2px solid;
+    font-size: 100%;
+    background-color: white;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 0.5em 0.5em -0.3em gray;
+    position:relative;
+    right: 0px;
+    bottom:10px;
+
+}
+.buttonName{
+    position: relative;
+    bottom: 25px;
+    bottom: 35px;
+
+}
